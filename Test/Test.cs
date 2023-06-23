@@ -31,7 +31,7 @@ public class Test {
 
         PSOAlias.PSO pso = new PSOAlias.PSO {
             PopulationSize = 300,
-            Iterations = 1000,
+            Iterations = 3000,
             InertiaCoefficient = 0.5,
             CognitiveCoefficient = 1.0,
             SocialCoefficient = 1.0,
