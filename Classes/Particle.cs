@@ -1,7 +1,10 @@
 using System;
+using System.Linq;
 
-public class Particle {
-    public double[] Position {get; set;}
-    public double[] BestPosition {get; set;}
-    public double[] Velocity {get; set;}
+namespace PSO.Classes {
+    public class Particle {
+        public required double[] Position {get; set;}
+        public required double[] BestPosition {get; set;}
+        public required double[] Velocity {get; set;}
+    }
 }

@@ -1,0 +1,15 @@
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.csproj.AssemblyReference.cache
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.AssemblyInfoInputs.cache
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.AssemblyInfo.cs
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.csproj.CoreCompileInputs.cache
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\PSO.exe
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\PSO.deps.json
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\PSO.runtimeconfig.json
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\PSO.dll
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\PSO.pdb
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.dll
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\refint\PSO.dll
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.pdb
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.genruntimeconfig.cache
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\ref\PSO.dll
