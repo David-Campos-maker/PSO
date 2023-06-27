@@ -41,9 +41,12 @@ public class Test {
         pso.Run(events);
 
         foreach (User user in events[0].Participants) {
-            Console.WriteLine(user.Name + "` :" + "Schedule");
-            foreach (Event e in user.Schedule) {
-                Console.WriteLine(" - " + e.Name + ": " + e.Date.ToShortDateString() + " " + e.Time);
+            Console.WriteLine(user.Name + "`s: " + "Schedule");
+            
+            if(user.Schedule != null) {
+                foreach (Event e in user.Schedule) {
+                    Console.WriteLine(" - " + e.Name + ": " + e.Date.ToShortDateString() + " " + e.Time);
+                }
             }
         }
     }

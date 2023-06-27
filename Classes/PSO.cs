@@ -9,15 +9,19 @@ namespace PSO.Classes {
         public double InertiaCoefficient {get; set;}
         public double CognitiveCoefficient {get; set;}
         public double SocialCoefficient {get; set;}
-        public double[] GlobalBestPosition {get; set;}
+        public required double[] GlobalBestPosition {get; set;}
 
         private bool IsAnyDayAvailableInCurrentYear(List<Event> events) {
             // Check if there is any day available in the current year for any user
             foreach (Event e in events) {
-                foreach (User user in e.Participants) {
-                    for (int i = 0; i < user.Schedule.Count - 1; i++) {
-                        if (user.Schedule[i].Date.Year == DateTime.Now.Year && user.Schedule[i].Time.Add(user.Schedule[i].Duration) <= user.Schedule[i + 1].Time) {
-                            return true;
+                if(e.Participants != null) {
+                    foreach (User user in e.Participants) {
+                        if(user.Schedule != null) {
+                            for (int i = 0; i < user.Schedule.Count - 1; i++) {
+                                if (user.Schedule[i].Date.Year == DateTime.Now.Year && user.Schedule[i].Time.Add(user.Schedule[i].Duration) <= user.Schedule[i + 1].Time) {
+                                    return true;
+                                }
+                            }
                         }
                     }
                 }
@@ -46,23 +50,27 @@ namespace PSO.Classes {
                     DateTime eventStart = date.Add(time);
                     DateTime eventEnd = eventStart.Add(e.Duration);
 
-                    foreach (User user in e.Participants) {
-                        // Penalize solutions that assign events outside of the user's available schedule
-                        bool isAvailable = false;
-                        for (int j = 0; j < user.Schedule.Count - 1; j++) {
-                            if (user.Schedule[j].Time.Add(user.Schedule[j].Duration) <= time && time.Add(e.Duration) <= user.Schedule[j + 1].Time) {
-                                isAvailable = true;
-                                break;
-                            }
-                        }
-                        if (!isAvailable) {
-                            quality += 1000;
-                        }
+                    if(e.Participants != null) {
+                        foreach (User user in e.Participants) {
+                            // Penalize solutions that assign events outside of the user's available schedule
+                            bool isAvailable = false;
+                            if(user.Schedule != null) {
+                                for (int j = 0; j < user.Schedule.Count - 1; j++) {
+                                    if (user.Schedule[j].Time.Add(user.Schedule[j].Duration) <= time && time.Add(e.Duration) <= user.Schedule[j + 1].Time) {
+                                        isAvailable = true;
+                                        break;
+                                    }
+                                }
+                                if (!isAvailable) {
+                                    quality += 1000;
+                                }
 
-                        if (user.Schedule.Any(scheduledEvent => 
-                            (scheduledEvent.Date == date && scheduledEvent.Time >= time && scheduledEvent.Time < eventEnd.TimeOfDay) ||
-                            (scheduledEvent.Date == date && scheduledEvent.Time < time && scheduledEvent.Time.Add(scheduledEvent.Duration) > time))) {
-                            quality += 1;
+                                if (user.Schedule.Any(scheduledEvent => 
+                                    (scheduledEvent.Date == date && scheduledEvent.Time >= time && scheduledEvent.Time < eventEnd.TimeOfDay) ||
+                                    (scheduledEvent.Date == date && scheduledEvent.Time < time && scheduledEvent.Time.Add(scheduledEvent.Duration) > time))) {
+                                    quality += 1;
+                                }
+                            }
                         }
                     }
                 }
@@ -142,8 +150,13 @@ namespace PSO.Classes {
                 TimeSpan time = TimeSpan.FromHours(GlobalBestPosition[i + 1]);
 
                 Event e = events[i / 2];
-                foreach (User user in e.Participants) {
-                    user.Schedule.Add(new Event { Name = e.Name, Date = date, Time = time });
+
+                if(e.Participants != null) {
+                    foreach (User user in e.Participants) {
+                        if(user.Schedule != null) {
+                            user.Schedule.Add(new Event { Name = e.Name, Date = date, Time = time });
+                        }
+                    }
                 }
             }
         }
