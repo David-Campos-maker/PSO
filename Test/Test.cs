@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using PSO.Classes;
 using PSOAlias = PSO.Classes;
 
@@ -33,7 +30,7 @@ public class Test {
 
         PSOAlias.PSO pso = new PSOAlias.PSO {
             PopulationSize = 10000,
-            Iterations = 1000,
+            Iterations = 100,
             InertiaCoefficient = 0.5,
             CognitiveCoefficient = 1.0,
             SocialCoefficient = 1.0,
@@ -42,15 +39,18 @@ public class Test {
 
         pso.Run(events);
 
-        foreach (User user in events[0].Participants) {
-            Console.WriteLine(user.Name + "`s: " + "Schedule");
-            
-            if(user.Schedule != null) {
-                foreach (Event e in user.Schedule) {
-                    Console.WriteLine(" - " + e.Name + ": " + e.Date.ToShortDateString() + " " + e.Time);
+        foreach (var currentEvent in events) {
+            if(currentEvent.Participants != null) {
+                foreach (User user in currentEvent.Participants) {
+                    Console.WriteLine(user.Name + "`s: " + "Schedule");
+                    
+                    if(user.Schedule != null) {
+                        foreach (Event e in user.Schedule) {
+                            Console.WriteLine(" - " + e.Name + ": " + e.Date.ToShortDateString() + " " + e.Time);
+                        }
+                    }
                 }
             }
         }
     }
 }
-
