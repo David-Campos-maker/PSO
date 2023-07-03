@@ -1,160 +1,214 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace PSO.Classes {
     public class PSO {
-        public int PopulationSize {get; set;}
-        public int Iterations {get; set;}
-        public double InertiaCoefficient {get; set;}
-        public double CognitiveCoefficient {get; set;}
-        public double SocialCoefficient {get; set;}
-        public required double[] GlobalBestPosition {get; set;}
+        public int PopulationSize { get; set; }
+        public int Iterations { get; set; }
+        public double InertiaCoefficient { get; set; }
+        public double CognitiveCoefficient { get; set; }
+        public double SocialCoefficient { get; set; }
+        public required double[] GlobalBestPosition { get; set; }
 
-        private bool IsAnyDayAvailableInCurrentYear(List<Event> events) {
-            // Check if there is any day available in the current year for any user
-            foreach (Event e in events) {
-                if(e.Participants != null) {
+        private bool IsEventWithinSchedule(DateTime date, TimeSpan eventStart, TimeSpan eventEnd, List<Event> schedule) {
+            if (schedule == null)
+                return true;
+
+            foreach (Event scheduledEvent in schedule) {
+                if (scheduledEvent == null)
+                    continue;
+
+                DateTime scheduledDate = scheduledEvent.Date.Date;
+                TimeSpan scheduledStartTime = scheduledEvent.Time;
+                TimeSpan scheduledEndTime = scheduledStartTime.Add(scheduledEvent.Duration);
+
+                if (scheduledDate == date && !(eventEnd <= scheduledStartTime || eventStart >= scheduledEndTime)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private double ObjectiveFunction(double[] position, List<Event> events) {
+            double quality = 0.0;
+
+            DateTime currentDate = DateTime.Now.Date;
+            DateTime maxFutureDate = currentDate.AddMonths(1).Date;
+
+            for (int i = 0; i < position.Length - 1; i += 2) {
+                DateTime eventDate = DateTime.FromOADate(position[i]);
+                TimeSpan time = TimeSpan.FromHours(position[i + 1]);
+
+                Event e = events[i / 2];
+
+                if (e == null)
+                    continue;
+
+                if (eventDate < currentDate || eventDate > maxFutureDate) {
+                    quality += 1000.0; // Penalize invalid dates
+                }
+
+                if (e.Participants != null) {
                     foreach (User user in e.Participants) {
-                        if(user.Schedule != null) {
-                            for (int i = 0; i < user.Schedule.Count - 1; i++) {
-                                if (user.Schedule[i].Date.Year == DateTime.Now.Year && user.Schedule[i].Time.Add(user.Schedule[i].Duration) <= user.Schedule[i + 1].Time) {
-                                    return true;
-                                }
+                        if (user == null || user.Schedule == null)
+                            continue;
+
+                        foreach (Event scheduledEvent in user.Schedule) {
+                            if (scheduledEvent == null)
+                                continue;
+
+                            DateTime scheduledDate = scheduledEvent.Date.Date;
+                            TimeSpan scheduledStartTime = scheduledEvent.Time;
+                            TimeSpan scheduledEndTime = scheduledStartTime.Add(scheduledEvent.Duration);
+
+                            // Check if the current event overlaps with any scheduled event
+                            if (eventDate == scheduledDate && !(time >= scheduledEndTime || time + e.Duration <= scheduledStartTime)) {
+                                quality += 1.0; // Apply penalty for overlapping event
                             }
+                        }
+
+                        // Check if the current event is within the user's schedule
+                        if (!IsEventWithinSchedule(eventDate, time, time.Add(e.Duration), user.Schedule)) {
+                            quality += 1.0; // Apply penalty for event not being within the schedule
                         }
                     }
                 }
             }
-            return false;
-        }
 
-        private double ObjectiveFunction(double[] position, List<Event> events) {
-            double quality = 0;
+            // Minimize the distance between event dates
+            for (int i = 0; i < position.Length - 3; i += 2) {
+                DateTime currentDate2 = DateTime.FromOADate(position[i]);
+                DateTime nextDate = DateTime.FromOADate(position[i + 2]);
 
-            for (int i = 0; i < position.Length - 1; i += 2) {
-                DateTime date = DateTime.FromOADate(position[i]);
-                TimeSpan time = TimeSpan.FromHours(position[i + 1]);
-
-                // Penalize solutions that assign events to invalid times
-                if (time.Hours < 7 || time.Hours > 18) {
-                    quality += 1000;
-                }
-
-                // Penalize solutions that assign events to invalid dates
-                if (date < DateTime.Now || (date.Year > DateTime.Now.Year && !IsAnyDayAvailableInCurrentYear(events))) {
-                    quality += 1000;
-                }
-
-                foreach (Event e in events) {
-                    DateTime eventStart = date.Add(time);
-                    DateTime eventEnd = eventStart.Add(e.Duration);
-
-                    if(e.Participants != null) {
-                        foreach (User user in e.Participants) {
-                            // Penalize solutions that assign events outside of the user's available schedule
-                            bool isAvailable = false;
-                            if(user.Schedule != null) {
-                                for (int j = 0; j < user.Schedule.Count - 1; j++) {
-                                    if (user.Schedule[j].Time.Add(user.Schedule[j].Duration) <= time && time.Add(e.Duration) <= user.Schedule[j + 1].Time) {
-                                        isAvailable = true;
-                                        break;
-                                    }
-                                }
-                                if (!isAvailable) {
-                                    quality += 1000;
-                                }
-
-                                if (user.Schedule.Any(scheduledEvent => 
-                                    (scheduledEvent.Date == date && scheduledEvent.Time >= time && scheduledEvent.Time < eventEnd.TimeOfDay) ||
-                                    (scheduledEvent.Date == date && scheduledEvent.Time < time && scheduledEvent.Time.Add(scheduledEvent.Duration) > time))) {
-                                    quality += 1;
-                                }
-                            }
-                        }
-                    }
-                }
+                double daysDifference = (nextDate - currentDate2).TotalDays;
+                quality += Math.Abs(daysDifference);
             }
 
             return quality;
         }
 
+        private void AddEventToSchedule(string name, DateTime date, TimeSpan time, TimeSpan duration, User user) {
+            if (user == null || user.Schedule == null)
+                return;
+
+            foreach (Event scheduledEvent in user.Schedule) {
+                DateTime scheduledDate = scheduledEvent.Date.Date;
+                TimeSpan scheduledStartTime = scheduledEvent.Time;
+                TimeSpan scheduledEndTime = scheduledStartTime.Add(scheduledEvent.Duration);
+
+                if (date == scheduledDate && !(time >= scheduledEndTime || time + duration <= scheduledStartTime)) {
+                    return;
+                }
+            }
+
+            Event newEvent = new Event {
+                Name = name,
+                Date = date,
+                Time = time,
+                Duration = duration
+            };
+
+            user.Schedule.Add(newEvent);
+        }
+
         public void Run(List<Event> events) {
-            // Initialize the particle swarm with random values
-            var swarm = new Particle[PopulationSize];
-            var random = new Random();
-            int dimensions = events.Count * 2; // Two dimensions (date and time) for each event
+            Random random = new Random();
 
-            for (int i = 0; i < PopulationSize; i++) {
-                var position = new double[dimensions];
-                var velocity = new double[dimensions];
+            int populationSize = PopulationSize;
+            int iterations = Iterations;
+            double inertiaCoefficient = InertiaCoefficient;
+            double cognitiveCoefficient = CognitiveCoefficient;
+            double socialCoefficient = SocialCoefficient;
 
-                // Initialize particle position and velocity with random values
-                for (int j = 0; j < position.Length; j++) {
-                    if (j % 2 == 0) {
-                        // Initialize the event date
-                        double minValue = DateTime.Now.ToOADate();
-                        double maxValue = DateTime.Now.AddYears(1).ToOADate();
+            // Initialize population
+            double[][] population = new double[populationSize][];
+            double[][] velocities = new double[populationSize][];
+            double[] personalBestQuality = new double[populationSize];
+            double[][] personalBestPosition = new double[populationSize][];
 
-                        position[j] = minValue + (maxValue - minValue) * random.NextDouble();
-                        velocity[j] = minValue + (maxValue - minValue) * random.NextDouble();
-                    } else {
-                        // Initialize event time
-                        int minValue = 0;
-                        int maxValue = 23;
+            DateTime minDate = DateTime.MinValue;
+            DateTime maxDate = DateTime.MaxValue;
 
-                        position[j] = random.Next(minValue, maxValue + 1);
-                        velocity[j] = random.Next(minValue, maxValue + 1);
+            for (int i = 0; i < populationSize; i++) {
+                population[i] = new double[events.Count * 2];
+                velocities[i] = new double[events.Count * 2];
+                personalBestPosition[i] = new double[events.Count * 2];
+
+                for (int j = 0; j < events.Count; j++) {
+                    Event e = events[j];
+
+                    // Generate valid date within the specified range
+                    double minValue = Math.Max(minDate.ToOADate(), e.Date.AddDays(-14).ToOADate());
+                    double maxValue = Math.Min(maxDate.ToOADate(), e.Date.AddDays(14).ToOADate());
+                    population[i][j * 2] = Math.Round(minValue + (maxValue - minValue) * random.NextDouble(), MidpointRounding.AwayFromZero);
+
+                    // Generate valid time within the event's time window
+                    double minTime = e.Time.TotalHours;
+                    double maxTime = (e.Time + e.Duration).TotalHours;
+                    population[i][j * 2 + 1] = Math.Round(minTime + (maxTime - minTime) * random.NextDouble(), MidpointRounding.AwayFromZero);
+
+                    // Initialize velocities to zero
+                    velocities[i][j * 2] = 0.0;
+                    velocities[i][j * 2 + 1] = 0.0;
+                }
+
+                personalBestQuality[i] = double.MaxValue;
+            }
+
+            double[] globalBestPosition = null;
+            double globalBestQuality = double.MaxValue;
+
+            // Perform optimization iterations
+            for (int iter = 0; iter < iterations; iter++) {
+                // Update personal best positions
+                for (int i = 0; i < populationSize; i++) {
+                    double[] position = population[i];
+                    double quality = ObjectiveFunction(position, events);
+
+                    if (quality < personalBestQuality[i]) {
+                        personalBestQuality[i] = quality;
+                        Array.Copy(position, personalBestPosition[i], position.Length);
+
+                        if (quality < globalBestQuality) {
+                            globalBestQuality = quality;
+                            globalBestPosition = position;
+                        }
                     }
                 }
 
-                swarm[i] = new Particle {
-                    Position = position,
-                    BestPosition = position,
-                    Velocity = velocity
-                };
-            }
+                // Update velocities and positions
+                for (int i = 0; i < populationSize; i++) {
+                    double[] position = population[i];
+                    double[] velocity = velocities[i];
+                    double[] personalBestPos = personalBestPosition[i];
 
-            // Iterate for the specified number of iterations
-            for (int i = 0; i < Iterations; i++) {
+                    for (int j = 0; j < position.Length; j++) {
+                        double rp = random.NextDouble();
+                        double rg = random.NextDouble();
 
-                // Update the velocity and position of each particle
-                foreach (var particle in swarm) {
+                        if (globalBestPosition != null) {
+                            velocity[j] = inertiaCoefficient * velocity[j]
+                            + cognitiveCoefficient * rp * (personalBestPos[j] - position[j])
+                            + socialCoefficient * rg * (globalBestPosition[j] - position[j]);
 
-                    // Update particle speed
-                    for (int j = 0; j < particle.Velocity.Length; j++) {
-                        particle.Velocity[j] = InertiaCoefficient * particle.Velocity[j] + CognitiveCoefficient * new Random().NextDouble() 
-                        * (particle.BestPosition[j] - particle.Position[j]) + SocialCoefficient * new Random().NextDouble() * (GlobalBestPosition[j] - particle.Position[j]);
-                    }
-
-                    // Update particle position
-                    for (int j = 0; j < particle.Position.Length; j++) {
-                        particle.Position[j] += particle.Velocity[j];
-                    }
-
-                    // Check if the new position is better than the best known position of the particle
-                    if (ObjectiveFunction(particle.Position, events) < ObjectiveFunction(particle.BestPosition, events)) {
-                        particle.BestPosition = particle.Position;
-                    }
-
-                    // Check if the new position is better than the best known global position
-                    if (ObjectiveFunction(particle.Position, events) < ObjectiveFunction(GlobalBestPosition, events)) {
-                        GlobalBestPosition = particle.Position;
+                            position[j] += velocity[j];
+                        }
                     }
                 }
             }
 
-            // Assign events to users' schedules using the global best particle position
-            for (int i = 0; i < GlobalBestPosition.Length - 1; i += 2) {
-                DateTime date = DateTime.FromOADate(GlobalBestPosition[i]);
-                TimeSpan time = TimeSpan.FromHours(GlobalBestPosition[i + 1]);
+            // Update the schedule based on the global best position
+            if (globalBestPosition != null) {
+                for (int i = 0; i < globalBestPosition.Length - 1; i += 2) {
+                    int eventIndex = i / 2;
+                    Event e = events[eventIndex];
 
-                Event e = events[i / 2];
+                    DateTime eventDate = DateTime.FromOADate(globalBestPosition[i]);
+                    TimeSpan eventTime = TimeSpan.FromHours(globalBestPosition[i + 1]);
 
-                if(e.Participants != null) {
-                    foreach (User user in e.Participants) {
-                        if(user.Schedule != null) {
-                            user.Schedule.Add(new Event { Name = e.Name, Date = date, Time = time });
+                    if (e != null) {
+                        if (e.Participants != null) {
+                            foreach (User user in e.Participants) {
+                                AddEventToSchedule(e.Name, eventDate, eventTime, e.Duration, user);
+                            }
                         }
                     }
                 }
