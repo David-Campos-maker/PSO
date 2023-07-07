@@ -85,6 +85,31 @@ namespace PSO.Classes {
             return quality;
         }
 
+        private DateTime GetMinDate(DateTime eventDate, bool isPriority) {
+            DateTime currentDate = DateTime.Now.Date;
+            DateTime minDate;
+
+            if (isPriority) {
+                minDate = currentDate.AddDays(2).Date;
+            } else {
+                minDate = currentDate.Date > eventDate.AddDays(-14).Date ? currentDate : eventDate.AddDays(-14).Date;
+            }
+
+            return minDate;
+        }
+
+        private DateTime GetMaxDate(DateTime eventDate, bool isPriority) {
+            DateTime maxDate;
+
+            if (isPriority) {
+                maxDate = eventDate.AddDays(2).Date;
+            } else {
+                maxDate = eventDate.AddDays(14).Date;
+            }
+
+            return maxDate;
+        }
+
         private void AddEventToSchedule(string name, DateTime date, TimeSpan time, TimeSpan duration, User user) {
             if (user == null || user.Schedule == null)
                 return;
@@ -134,10 +159,21 @@ namespace PSO.Classes {
 
                 for (int j = 0; j < events.Count; j++) {
                     Event e = events[j];
+                    bool isPriority = e.Priority;
 
                     // Generate valid date within the specified range
-                    double minValue = Math.Max(minDate.ToOADate(), e.Date.AddDays(-14).ToOADate());
-                    double maxValue = Math.Min(maxDate.ToOADate(), e.Date.AddDays(14).ToOADate());
+                    DateTime solution_minDate = GetMinDate(e.Date, isPriority);
+                    DateTime solution_maxDate = GetMaxDate(e.Date, isPriority);
+
+                    double minValue = Math.Max(solution_minDate.ToOADate(), e.Date.AddDays(-14).ToOADate());
+                    double maxValue = Math.Min(solution_maxDate.ToOADate(), e.Date.AddDays(14).ToOADate());
+
+                    // Adjust the range based on priority
+                    if (isPriority) {
+                        minValue = Math.Max(minValue, e.Date.AddDays(-2).ToOADate());
+                        maxValue = Math.Min(maxValue, e.Date.AddDays(2).ToOADate());
+                    }
+
                     population[i][j * 2] = Math.Round(minValue + (maxValue - minValue) * random.NextDouble(), MidpointRounding.AwayFromZero);
 
                     // Generate valid time within the event's time window
