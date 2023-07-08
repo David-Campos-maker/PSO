@@ -43,7 +43,7 @@ namespace PSO.Classes {
             for (int i = 0; i < eventSubLists.Count; i++) {
                 List<Event> eventSubList = eventSubLists[i];
                 Event e = eventSubList[0];
-                
+
                 if (e == null) continue;
 
                 // Calculate the quality of the current sub-list
@@ -180,9 +180,12 @@ namespace PSO.Classes {
                     population[i][j * 2] = Math.Round(minValue + (maxValue - minValue) * random.NextDouble(), MidpointRounding.AwayFromZero);
 
                     // Generate valid time within the event's time window
-                    double minTime = e.Time.TotalHours;
-                    double maxTime = (e.Time + e.Duration).TotalHours;
-                    population[i][j * 2 + 1] = Math.Round(minTime + (maxTime - minTime) * random.NextDouble(), MidpointRounding.AwayFromZero);
+                    double minTime = Math.Max(e.Time.TotalHours + e.Duration.TotalHours, 8);
+                    double maxTime = 19;
+                    double time = minTime + (maxTime - minTime) * random.NextDouble();
+                    
+                    time = Math.Round(time / 0.25) * 0.25;
+                    population[i][j * 2 + 1] = time;
 
                     // Initialize velocities to zero
                     velocities[i][j * 2] = 0.0;
