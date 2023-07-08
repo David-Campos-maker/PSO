@@ -238,7 +238,7 @@ namespace PSO.Classes {
                 personalBestQuality[i] = double.MaxValue;
             }
 
-            double[] globalBestPosition = null;
+            double[] globalBestPosition = new double[events.Count * 2];
             double globalBestQuality = double.MaxValue;
 
             // Perform optimization iterations
