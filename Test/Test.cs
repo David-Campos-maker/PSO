@@ -62,8 +62,8 @@ public class Test {
                 Name = "Event 3" , 
                 Date = new DateTime(2023 , 07 , 04) ,
                 Time = new TimeSpan(8 , 0 , 0) ,
-                Duration = new TimeSpan(1, 0, 0) ,
-                Priority = false ,
+                Duration = new TimeSpan(0, 30, 0) ,
+                Priority = true ,
                 Participants = new List<User> {
                     new User {
                         Name = "David",

@@ -33,17 +33,26 @@ namespace PSO.Classes {
             DateTime currentDate = DateTime.Now.Date;
             DateTime maxFutureDate = currentDate.AddMonths(1).Date;
 
-            for (int i = 0; i < position.Length - 1; i += 2) {
-                DateTime eventDate = DateTime.FromOADate(position[i]);
-                TimeSpan time = TimeSpan.FromHours(position[i + 1]);
+            // Divide the list of events into sub-lists, each containing only one event
+            List<List<Event>> eventSubLists = new List<List<Event>>();
+            for (int i = 0; i < events.Count; i++) {
+                eventSubLists.Add(new List<Event> { events[i] });
+            }
 
-                Event e = events[i / 2];
+            // Calculate the quality of each sub-list
+            for (int i = 0; i < eventSubLists.Count; i++) {
+                List<Event> eventSubList = eventSubLists[i];
+                Event e = eventSubList[0];
+                
+                if (e == null) continue;
 
-                if (e == null)
-                    continue;
+                // Calculate the quality of the current sub-list
+                double subListQuality = 0.0;
+                DateTime eventDate = DateTime.FromOADate(position[i * 2]);
+                TimeSpan time = TimeSpan.FromHours(position[i * 2 + 1]);
 
                 if (eventDate < currentDate || eventDate > maxFutureDate) {
-                    quality += 1000.0; // Penalize invalid dates
+                    subListQuality += 1000.0; // Penalize invalid dates
                 }
 
                 if (e.Participants != null) {
@@ -61,25 +70,28 @@ namespace PSO.Classes {
 
                             // Check if the current event overlaps with any scheduled event
                             if (eventDate == scheduledDate && !(time >= scheduledEndTime || time + e.Duration <= scheduledStartTime)) {
-                                quality += 1.0; // Apply penalty for overlapping event
+                                subListQuality += 1.0; // Apply penalty for overlapping event
                             }
                         }
 
                         // Check if the current event is within the user's schedule
                         if (!IsEventWithinSchedule(eventDate, time, time.Add(e.Duration), user.Schedule)) {
-                            quality += 1.0; // Apply penalty for event not being within the schedule
+                            subListQuality += 1.0; // Apply penalty for event not being within the schedule
                         }
                     }
                 }
-            }
 
-            // Minimize the distance between event dates
-            for (int i = 0; i < position.Length - 3; i += 2) {
-                DateTime currentDate2 = DateTime.FromOADate(position[i]);
-                DateTime nextDate = DateTime.FromOADate(position[i + 2]);
+                // Minimize the distance between event dates
+                for (int j = 0; j < position.Length - 3; j += 2) {
+                    DateTime currentDate2 = DateTime.FromOADate(position[j]);
+                    DateTime nextDate = DateTime.FromOADate(position[j + 2]);
 
-                double daysDifference = (nextDate - currentDate2).TotalDays;
-                quality += Math.Abs(daysDifference);
+                    double daysDifference = (nextDate - currentDate2).TotalDays;
+                    subListQuality += Math.Abs(daysDifference);
+                }
+
+                // Add the quality of the current sub-list to the total quality
+                quality += subListQuality;
             }
 
             return quality;
@@ -90,21 +102,22 @@ namespace PSO.Classes {
             DateTime minDate;
 
             if (isPriority) {
-                minDate = currentDate.AddDays(2).Date;
+                minDate = currentDate;
             } else {
-                minDate = currentDate.Date > eventDate.AddDays(-14).Date ? currentDate : eventDate.AddDays(-14).Date;
+                minDate = currentDate;
             }
 
             return minDate;
         }
 
         private DateTime GetMaxDate(DateTime eventDate, bool isPriority) {
+            DateTime currentDate = DateTime.Now.Date;
             DateTime maxDate;
 
             if (isPriority) {
-                maxDate = eventDate.AddDays(2).Date;
+                maxDate = currentDate.AddDays(2);
             } else {
-                maxDate = eventDate.AddDays(14).Date;
+                maxDate = currentDate.AddDays(14);
             }
 
             return maxDate;
@@ -149,9 +162,6 @@ namespace PSO.Classes {
             double[] personalBestQuality = new double[populationSize];
             double[][] personalBestPosition = new double[populationSize][];
 
-            DateTime minDate = DateTime.MinValue;
-            DateTime maxDate = DateTime.MaxValue;
-
             for (int i = 0; i < populationSize; i++) {
                 population[i] = new double[events.Count * 2];
                 velocities[i] = new double[events.Count * 2];
@@ -164,15 +174,8 @@ namespace PSO.Classes {
                     // Generate valid date within the specified range
                     DateTime solution_minDate = GetMinDate(e.Date, isPriority);
                     DateTime solution_maxDate = GetMaxDate(e.Date, isPriority);
-
-                    double minValue = Math.Max(solution_minDate.ToOADate(), e.Date.AddDays(-14).ToOADate());
-                    double maxValue = Math.Min(solution_maxDate.ToOADate(), e.Date.AddDays(14).ToOADate());
-
-                    // Adjust the range based on priority
-                    if (isPriority) {
-                        minValue = Math.Max(minValue, e.Date.AddDays(-2).ToOADate());
-                        maxValue = Math.Min(maxValue, e.Date.AddDays(2).ToOADate());
-                    }
+                    double minValue = solution_minDate.ToOADate();
+                    double maxValue = solution_maxDate.ToOADate();
 
                     population[i][j * 2] = Math.Round(minValue + (maxValue - minValue) * random.NextDouble(), MidpointRounding.AwayFromZero);
 
@@ -230,7 +233,7 @@ namespace PSO.Classes {
                     }
                 }
             }
-
+            
             // Update the schedule based on the global best position
             if (globalBestPosition != null) {
                 for (int i = 0; i < globalBestPosition.Length - 1; i += 2) {
