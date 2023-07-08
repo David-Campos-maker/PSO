@@ -131,7 +131,7 @@ namespace PSO.Classes {
             double time = minTime + (maxTime - minTime) * random.NextDouble();
             time = Math.Round(time / 0.25) * 0.25;
             
-            // Continuar gerando horários até encontrar um horário válido
+            // Continue generating times until a valid time is found
             while (HasConflict(events, eventIndex, time)) {
                 time = minTime + (maxTime - minTime) * random.NextDouble();
                 time = Math.Round(time / 0.25) * 0.25;
@@ -144,10 +144,10 @@ namespace PSO.Classes {
             Event e = events[eventIndex];
             double endTime = time + e.Duration.TotalHours;
             
-            // Verificar se o horário gerado conflita com a agenda dos participantes
+            // Check if the generated schedule conflicts with the participants' agenda
             if (e.Participants != null) {
                 foreach (User participant in e.Participants) {
-                    // Verificar conflito com eventos já otimizados pelo PSO
+                    // Check conflict with events already optimized by PSO
                     for (int i = 0; i < eventIndex; i++) {
                         Event scheduledEvent = events[i];
                         double scheduledEndTime = scheduledEvent.Time.TotalHours + scheduledEvent.Duration.TotalHours;
@@ -156,7 +156,7 @@ namespace PSO.Classes {
                         }
                     }
                     
-                    // Verificar conflito com eventos na agenda do participante
+                    // Check for conflicts with events in the attendee's agenda
                     if (participant.Schedule != null) {
                         foreach (Event scheduledEvent in participant.Schedule) {
                             double scheduledEndTime = scheduledEvent.Time.TotalHours + scheduledEvent.Duration.TotalHours;
