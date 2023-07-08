@@ -123,6 +123,54 @@ namespace PSO.Classes {
             return maxDate;
         }
 
+        public double GenerateValidTime(List<Event> events, int eventIndex, Random random) {
+            Event e = events[eventIndex];
+
+            double minTime = Math.Max(e.Time.TotalHours + e.Duration.TotalHours, 8);
+            double maxTime = 19;
+            double time = minTime + (maxTime - minTime) * random.NextDouble();
+            time = Math.Round(time / 0.25) * 0.25;
+            
+            // Continuar gerando horários até encontrar um horário válido
+            while (HasConflict(events, eventIndex, time)) {
+                time = minTime + (maxTime - minTime) * random.NextDouble();
+                time = Math.Round(time / 0.25) * 0.25;
+            }
+            
+            return time;
+        }
+
+        public bool HasConflict(List<Event> events, int eventIndex, double time) {
+            Event e = events[eventIndex];
+            double endTime = time + e.Duration.TotalHours;
+            
+            // Verificar se o horário gerado conflita com a agenda dos participantes
+            if (e.Participants != null) {
+                foreach (User participant in e.Participants) {
+                    // Verificar conflito com eventos já otimizados pelo PSO
+                    for (int i = 0; i < eventIndex; i++) {
+                        Event scheduledEvent = events[i];
+                        double scheduledEndTime = scheduledEvent.Time.TotalHours + scheduledEvent.Duration.TotalHours;
+                        if (e.Date == scheduledEvent.Date && ((time >= scheduledEvent.Time.TotalHours && time < scheduledEndTime) || (endTime > scheduledEvent.Time.TotalHours && endTime <= scheduledEndTime) || (time <= scheduledEvent.Time.TotalHours && endTime >= scheduledEndTime))) {
+                            return true;
+                        }
+                    }
+                    
+                    // Verificar conflito com eventos na agenda do participante
+                    if (participant.Schedule != null) {
+                        foreach (Event scheduledEvent in participant.Schedule) {
+                            double scheduledEndTime = scheduledEvent.Time.TotalHours + scheduledEvent.Duration.TotalHours;
+                            if (e.Date == scheduledEvent.Date && ((time >= scheduledEvent.Time.TotalHours && time < scheduledEndTime) || (endTime > scheduledEvent.Time.TotalHours && endTime <= scheduledEndTime) || (time <= scheduledEvent.Time.TotalHours && endTime >= scheduledEndTime))) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return false;
+        }
+
         private void AddEventToSchedule(string name, DateTime date, TimeSpan time, TimeSpan duration, User user) {
             if (user == null || user.Schedule == null)
                 return;
@@ -180,12 +228,7 @@ namespace PSO.Classes {
                     population[i][j * 2] = Math.Round(minValue + (maxValue - minValue) * random.NextDouble(), MidpointRounding.AwayFromZero);
 
                     // Generate valid time within the event's time window
-                    double minTime = Math.Max(e.Time.TotalHours + e.Duration.TotalHours, 8);
-                    double maxTime = 19;
-                    double time = minTime + (maxTime - minTime) * random.NextDouble();
-                    
-                    time = Math.Round(time / 0.25) * 0.25;
-                    population[i][j * 2 + 1] = time;
+                    population[i][j * 2 + 1] = GenerateValidTime(events, j, random);
 
                     // Initialize velocities to zero
                     velocities[i][j * 2] = 0.0;
