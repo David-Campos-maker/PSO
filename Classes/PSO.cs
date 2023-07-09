@@ -7,7 +7,7 @@ namespace PSO.Classes {
         public double SocialCoefficient { get; set; }
         public required double[] GlobalBestPosition { get; set; }
 
-        private bool IsEventWithinSchedule(DateTime date, TimeSpan eventStart, TimeSpan eventEnd, List<Event> schedule) {
+        private static bool IsEventWithinSchedule(DateTime date, TimeSpan eventStart, TimeSpan eventEnd, List<Event> schedule) {
             if (schedule == null)
                 return true;
 
@@ -27,14 +27,14 @@ namespace PSO.Classes {
             return true;
         }
 
-        private double ObjectiveFunction(double[] position, List<Event> events) {
+        private static double ObjectiveFunction(double[] position, List<Event> events) {
             double quality = 0.0;
 
             DateTime currentDate = DateTime.Now.Date;
             DateTime maxFutureDate = currentDate.AddMonths(1).Date;
 
             // Divide the list of events into sub-lists, each containing only one event
-            List<List<Event>> eventSubLists = new List<List<Event>>();
+            List<List<Event>> eventSubLists = new();
             for (int i = 0; i < events.Count; i++) {
                 eventSubLists.Add(new List<Event> { events[i] });
             }
@@ -52,7 +52,7 @@ namespace PSO.Classes {
                 TimeSpan time = TimeSpan.FromHours(position[i * 2 + 1]);
 
                 if (eventDate < currentDate || eventDate > maxFutureDate) {
-                    subListQuality += 1000.0; // Penalize invalid dates
+                    subListQuality += 10000.0; // Penalize invalid dates
                 }
 
                 if (e.Participants != null) {
@@ -97,7 +97,7 @@ namespace PSO.Classes {
             return quality;
         }
 
-        private DateTime GetMinDate(DateTime eventDate, bool isPriority) {
+        private static DateTime GetMinDate(bool isPriority) {
             DateTime currentDate = DateTime.Now.Date;
             DateTime minDate;
 
@@ -110,7 +110,7 @@ namespace PSO.Classes {
             return minDate;
         }
 
-        private DateTime GetMaxDate(DateTime eventDate, bool isPriority) {
+        private static DateTime GetMaxDate(bool isPriority) {
             DateTime currentDate = DateTime.Now.Date;
             DateTime maxDate;
 
@@ -123,7 +123,7 @@ namespace PSO.Classes {
             return maxDate;
         }
 
-        public double GenerateValidTime(List<Event> events, int eventIndex, Random random) {
+        public static double GenerateValidTime(List<Event> events, int eventIndex, Random random) {
             Event e = events[eventIndex];
 
             double minTime = Math.Max(e.Time.TotalHours + e.Duration.TotalHours, 8);
@@ -140,7 +140,7 @@ namespace PSO.Classes {
             return time;
         }
 
-        public bool HasConflict(List<Event> events, int eventIndex, double time) {
+        public static bool HasConflict(List<Event> events, int eventIndex, double time) {
             Event e = events[eventIndex];
             double endTime = time + e.Duration.TotalHours;
             
@@ -171,7 +171,7 @@ namespace PSO.Classes {
             return false;
         }
 
-        private void AddEventToSchedule(string name, DateTime date, TimeSpan time, TimeSpan duration, User user) {
+        private static void AddEventToSchedule(string name, DateTime date, TimeSpan time, TimeSpan duration, User user) {
             if (user == null || user.Schedule == null)
                 return;
 
@@ -185,7 +185,7 @@ namespace PSO.Classes {
                 }
             }
 
-            Event newEvent = new Event {
+            Event newEvent = new() {
                 Name = name,
                 Date = date,
                 Time = time,
@@ -196,7 +196,7 @@ namespace PSO.Classes {
         }
 
         public void Run(List<Event> events) {
-            Random random = new Random();
+            Random random = new();
 
             int populationSize = PopulationSize;
             int iterations = Iterations;
@@ -220,8 +220,8 @@ namespace PSO.Classes {
                     bool isPriority = e.Priority;
 
                     // Generate valid date within the specified range
-                    DateTime solution_minDate = GetMinDate(e.Date, isPriority);
-                    DateTime solution_maxDate = GetMaxDate(e.Date, isPriority);
+                    DateTime solution_minDate = GetMinDate(isPriority);
+                    DateTime solution_maxDate = GetMaxDate(isPriority);
                     double minValue = solution_minDate.ToOADate();
                     double maxValue = solution_maxDate.ToOADate();
 
