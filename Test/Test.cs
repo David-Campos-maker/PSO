@@ -38,22 +38,22 @@ public class Test {
                     new User {
                         Name = "David",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event A", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(2, 0, 0) } ,
-                            new Event { Name = "Event B", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(13, 30, 0), Duration = new TimeSpan(3, 30, 0) }
+                            new Event { Name = "Event A", Date = new DateTime(2023, 08 , 03), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(2, 0, 0) } ,
+                            new Event { Name = "Event B", Date = new DateTime(2023, 08 , 03), Time = new TimeSpan(13, 30, 0), Duration = new TimeSpan(3, 30, 0) }
                         }
                     },
                     new User {
                         Name = "Eduardo",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event C", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(3, 35, 0) } ,
-                            new Event { Name = "Event D", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(12, 45, 0), Duration = new TimeSpan(0, 10, 0) }
+                            new Event { Name = "Event C", Date = new DateTime(2023, 08 , 02), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(3, 35, 0) } ,
+                            new Event { Name = "Event D", Date = new DateTime(2023, 08 , 02), Time = new TimeSpan(12, 45, 0), Duration = new TimeSpan(0, 10, 0) }
                         }
                     },
                     new User {
                         Name = "Rodrigo",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event E", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 35, 0) } ,
-                            new Event { Name = "Event F", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(14, 30, 0), Duration = new TimeSpan(0, 10, 0) }
+                            new Event { Name = "Event E", Date = new DateTime(2023, 08 , 04), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 35, 0) } ,
+                            new Event { Name = "Event F", Date = new DateTime(2023, 08 , 04), Time = new TimeSpan(14, 30, 0), Duration = new TimeSpan(0, 10, 0) }
                         }
                     }
                 }

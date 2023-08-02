@@ -61,8 +61,8 @@ namespace PSO.Helpers {
                         }
 
                         // Check if the current event fits within the user's work day
-                        TimeSpan workDayStart = new TimeSpan(7, 0, 0);
-                        TimeSpan workDayEnd = new TimeSpan(18, 0, 0);
+                        TimeSpan workDayStart = new(7, 0, 0);
+                        TimeSpan workDayEnd = new(18, 0, 0);
                         if (time + e.Duration > workDayEnd) {
                             eventQuality += 1000.0; // Apply a large penalty for event not fitting within the user's work day
                         }
