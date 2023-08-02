@@ -27,63 +27,53 @@ namespace PSO.Helpers {
             DateTime currentDate = DateTime.Now.Date;
             DateTime maxFutureDate = currentDate.AddMonths(1).Date;
 
-            // Divide the list of events into sub-lists, each containing only one event
-            List<List<Event>> eventSubLists = events.Select(e => new List<Event> { e }).ToList();
-
-            // Calculate the quality of each sub-list
-            for (int i = 0; i < eventSubLists.Count; i++) {
-                List<Event> eventSubList = eventSubLists[i];
-                Event e = eventSubList[0];
+            // Calculate the quality of each event
+            for (int i = 0; i < events.Count; i++) {
+                Event e = events[i];
 
                 if (e == null) continue;
 
-                // Calculate the quality of the current sub-list
-                double subListQuality = 0.0;
+                // Calculate the quality of the current event
+                double eventQuality = 0.0;
                 DateTime eventDate = DateTime.FromOADate(position[i * 2]);
                 TimeSpan time = TimeSpan.FromHours(position[i * 2 + 1]);
 
                 if (eventDate < currentDate || eventDate > maxFutureDate) {
-                    subListQuality += 10000.0; // Penalize invalid dates
+                    eventQuality += 10000.0; // Penalize invalid dates
                 }
 
                 if (e.Participants != null) {
                     foreach (User user in e.Participants.Where(user => user != null && user.Schedule != null)) {
-                        foreach (Event scheduledEvent in user.Schedule.Where(scheduledEvent => scheduledEvent != null)) {
+                        // Check if the current event overlaps with any scheduled event
+                        foreach (Event scheduledEvent in user.Schedule) {
                             DateTime scheduledDate = scheduledEvent.Date.Date;
                             TimeSpan scheduledStartTime = scheduledEvent.Time;
                             TimeSpan scheduledEndTime = scheduledStartTime.Add(scheduledEvent.Duration);
 
-                            // Check if the current event overlaps with any scheduled event
                             if (eventDate == scheduledDate && !(time >= scheduledEndTime || time + e.Duration <= scheduledStartTime)) {
-                                subListQuality += 1.0; // Apply penalty for overlapping event
+                                eventQuality += 1.0; // Apply penalty for overlapping event
                             }
                         }
 
                         // Check if the current event is within the user's schedule
                         if (!IsEventWithinSchedule(eventDate, time, time.Add(e.Duration), user.Schedule)) {
-                            subListQuality += 1.0; // Apply penalty for event not being within the schedule
+                            eventQuality += 1000.0; // Apply a large penalty for event not being within the schedule
+                        }
+
+                        // Check if the current event fits within the user's work day
+                        TimeSpan workDayStart = new TimeSpan(7, 0, 0);
+                        TimeSpan workDayEnd = new TimeSpan(18, 0, 0);
+                        if (time + e.Duration > workDayEnd) {
+                            eventQuality += 1000.0; // Apply a large penalty for event not fitting within the user's work day
                         }
                     }
                 }
 
-                // Minimize the distance between event dates
-                for (int j = 0; j < position.Length - 3; j += 2) {
-                    DateTime currentDate2 = DateTime.FromOADate(position[j]);
-                    DateTime nextDate = DateTime.FromOADate(position[j + 2]);
-
-                    double daysDifference = (nextDate - currentDate2).TotalDays;
-                    subListQuality += Math.Abs(daysDifference);
-                }
-
-                // Add the quality of the current sub-list to the total quality
-                quality += subListQuality;
+                // Add the quality of the current event to the total quality
+                quality += eventQuality;
             }
 
             return quality;
-        }
-
-        public static DateTime GetMinDate(bool isPriority) {
-            return DateTime.Now.Date;
         }
 
         public static DateTime GetMaxDate(bool isPriority) {

@@ -37,7 +37,7 @@ namespace PSO.Classes {
                     bool isPriority = e.Priority;
 
                     // Generate valid date within the specified range
-                    DateTime solution_minDate = Helper.GetMinDate(isPriority);
+                    DateTime solution_minDate = DateTime.Now.Date;
                     DateTime solution_maxDate = Helper.GetMaxDate(isPriority);
                     double minValue = solution_minDate.ToOADate();
                     double maxValue = solution_maxDate.ToOADate();
@@ -58,29 +58,79 @@ namespace PSO.Classes {
             double[] globalBestPosition = new double[events.Count * 2];
             double globalBestQuality = double.MaxValue;
 
+            int noImprovementCount = 0;
+            int noImprovementLimit = 10;
+
+            double initialInertiaCoefficient = InertiaCoefficient;
+            double finalInertiaCoefficient = 0.4;
+
             // Perform optimization iterations
             for (int iter = 0; iter < iterations; iter++) {
+                // Check if the PSO is stuck in a local optimum
+                if (noImprovementCount >= noImprovementLimit) {
+                    // Reiniciar o PSO com uma nova população aleatória
+                    for (int i = 0; i < populationSize; i++) {
+                        for (int j = 0; j < events.Count; j++) {
+                            Event e = events[j];
+                            bool isPriority = e.Priority;
+
+                            // Generate valid date within the specified range
+                            DateTime solution_minDate = DateTime.Now.Date;
+                            DateTime solution_maxDate = Helper.GetMaxDate(isPriority);
+                            double minValue = solution_minDate.ToOADate();
+                            double maxValue = solution_maxDate.ToOADate();
+
+                            population[i][j * 2] = Math.Round(minValue + (maxValue - minValue) * random.NextDouble(), MidpointRounding.AwayFromZero);
+
+                            // Generate valid time within the event's time window
+                            population[i][j * 2 + 1] = Helper.GenerateValidTime(events, j, random);
+
+                            // Initialize velocities to zero
+                            velocities[i][j * 2] = 0.0;
+                            velocities[i][j * 2 + 1] = 0.0;
+                        }
+
+                        personalBestQuality[i] = double.MaxValue;
+                    }
+
+                    globalBestPosition = new double[events.Count * 2];
+                    globalBestQuality = double.MaxValue;
+
+                    noImprovementCount = 0;
+                }
+
+                // Update inertia coefficient
+                inertiaCoefficient = initialInertiaCoefficient - ((initialInertiaCoefficient - finalInertiaCoefficient) * iter / iterations);
+
+                // Select a random subset of the population
+                int sampleSize = populationSize / 2;
+                int[] sampleIndices = Enumerable.Range(0, populationSize).OrderBy(x => random.Next()).Take(sampleSize).ToArray();
+
                 // Update personal best positions
-                for (int i = 0; i < populationSize; i++) {
-                    double[] position = population[i];
+                for (int i = 0; i < sampleSize; i++) {
+                    int index = sampleIndices[i];
+                    double[] position = population[index];
                     double quality = Helper.ObjectiveFunction(position, events);
 
-                    if (quality < personalBestQuality[i]) {
-                        personalBestQuality[i] = quality;
-                        Array.Copy(position, personalBestPosition[i], position.Length);
+                    if (quality < personalBestQuality[index]) {
+                        personalBestQuality[index] = quality;
+                        Array.Copy(position, personalBestPosition[index], position.Length);
 
                         if (quality < globalBestQuality) {
                             globalBestQuality = quality;
                             globalBestPosition = position;
+
+                            noImprovementCount = 0;
                         }
                     }
                 }
 
                 // Update velocities and positions
-                for (int i = 0; i < populationSize; i++) {
-                    double[] position = population[i];
-                    double[] velocity = velocities[i];
-                    double[] personalBestPos = personalBestPosition[i];
+                for (int i = 0; i < sampleSize; i++) {
+                    int index = sampleIndices[i];
+                    double[] position = population[index];
+                    double[] velocity = velocities[index];
+                    double[] personalBestPos = personalBestPosition[index];
 
                     for (int j = 0; j < position.Length; j++) {
                         double rp = random.NextDouble();
@@ -95,6 +145,8 @@ namespace PSO.Classes {
                         }
                     }
                 }
+
+                noImprovementCount++;
             }
 
             // Update the schedule based on the global best position
