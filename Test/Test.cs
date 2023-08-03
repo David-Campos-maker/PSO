@@ -92,12 +92,19 @@ public class Test {
             }
         };
 
+        //Initializing PSO attributes dynamically according to list size
+        int populationSize = Math.Max(events.Count / 10, 20);
+        int iterations = Math.Max(events.Count / 10, 100);
+        double inertiaCoefficient = 0.5 * Math.Min(events.Count / 1000.0, 1.0);
+        double cognitiveCoefficient = 1.0 * Math.Min(events.Count / 1000.0, 1.0);
+        double socialCoefficient = 1.0 * Math.Min(events.Count / 1000.0, 1.0);
+
         PSOAlias.PSO pso = new PSOAlias.PSO {
-            PopulationSize = 10000 ,
-            Iterations = 1000 ,
-            InertiaCoefficient = 0.75 ,
-            CognitiveCoefficient = 1.0 ,
-            SocialCoefficient = 1.0 ,
+            PopulationSize = populationSize ,
+            Iterations = iterations ,
+            InertiaCoefficient = inertiaCoefficient ,
+            CognitiveCoefficient = cognitiveCoefficient ,
+            SocialCoefficient = socialCoefficient ,
             GlobalBestPosition = new double[events.Count * 2]
         };
 
