@@ -68,7 +68,7 @@ namespace PSO.Classes {
             for (int iter = 0; iter < iterations; iter++) {
                 // Check if the PSO is stuck in a local optimum
                 if (noImprovementCount >= noImprovementLimit) {
-                    // Reiniciar o PSO com uma nova população aleatória
+                    // Restart PSO with a new random population
                     for (int i = 0; i < populationSize; i++) {
                         for (int j = 0; j < events.Count; j++) {
                             Event e = events[j];
