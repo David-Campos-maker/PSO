@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Dav_i\\PSO\\PSO\\PSO.csproj": {}
+    "C:\\Users\\Dav_i\\PSO\\PSO\\PSO.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Dav_i\\PSO\\PSO\\PSO.csproj": {
+    "C:\\Users\\Dav_i\\PSO\\PSO\\PSO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Dav_i\\PSO\\PSO\\PSO.csproj",
+        "projectUniqueName": "C:\\Users\\Dav_i\\PSO\\PSO\\PSO.csproj",
         "projectName": "PSO",
-        "projectPath": "c:\\Users\\Dav_i\\PSO\\PSO\\PSO.csproj",
+        "projectPath": "C:\\Users\\Dav_i\\PSO\\PSO\\PSO.csproj",
         "packagesPath": "C:\\Users\\Dav_i\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Dav_i\\PSO\\PSO\\obj\\",
+        "outputPath": "C:\\Users\\Dav_i\\PSO\\PSO\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Dav_i\\AppData\\Roaming\\NuGet\\NuGet.Config"
