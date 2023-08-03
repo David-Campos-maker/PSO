@@ -93,8 +93,8 @@ public class Test {
         };
 
         //Initializing PSO attributes dynamically according to list size
-        int populationSize = Math.Max(events.Count / 10, 20);
-        int iterations = Math.Max(events.Count / 10, 100);
+        int populationSize = Math.Max(events.Count / 20, 100);
+        int iterations = Math.Max(events.Count / 100, 1000);
         double inertiaCoefficient = 0.5 * Math.Min(events.Count / 1000.0, 1.0);
         double cognitiveCoefficient = 1.0 * Math.Min(events.Count / 1000.0, 1.0);
         double socialCoefficient = 1.0 * Math.Min(events.Count / 1000.0, 1.0);
