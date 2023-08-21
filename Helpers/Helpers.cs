@@ -38,7 +38,7 @@ namespace PSO.Helpers {
                 DateTime eventDate = DateTime.FromOADate(position[i * 2]);
                 TimeSpan time = TimeSpan.FromHours(position[i * 2 + 1]);
 
-                if (eventDate < currentDate || eventDate > maxFutureDate) {
+                if (eventDate < currentDate) {
                     eventQuality += 10000.0; // Penalize invalid dates
                 }
 
@@ -51,7 +51,7 @@ namespace PSO.Helpers {
                             TimeSpan scheduledEndTime = scheduledStartTime.Add(scheduledEvent.Duration);
 
                             if (eventDate == scheduledDate && !(time >= scheduledEndTime || time + e.Duration <= scheduledStartTime)) {
-                                eventQuality += 1.0; // Apply penalty for overlapping event
+                                eventQuality += 1000.0; // Apply penalty for overlapping event
                             }
                         }
 
@@ -63,7 +63,7 @@ namespace PSO.Helpers {
                         // Check if the current event fits within the user's work day
                         TimeSpan workDayStart = new(7, 0, 0);
                         TimeSpan workDayEnd = new(18, 0, 0);
-                        if (time + e.Duration > workDayEnd) {
+                        if (time + e.Duration > workDayEnd || time + e.Duration < workDayStart) {
                             eventQuality += 1000.0; // Apply a large penalty for event not fitting within the user's work day
                         }
                     }

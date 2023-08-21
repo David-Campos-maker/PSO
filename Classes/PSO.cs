@@ -12,6 +12,15 @@ namespace PSO.Classes {
         public double SocialCoefficient { get; set; }
         public double[] GlobalBestPosition { get; set; } //required
 
+        public PSO (int populationSize , int iterations , double inertiaCoefficient , double cognitiveCoefficient , double socialCoefficient , int listLength) {
+            PopulationSize = populationSize;
+            Iterations = iterations;
+            InertiaCoefficient = inertiaCoefficient;
+            CognitiveCoefficient = cognitiveCoefficient;
+            SocialCoefficient = socialCoefficient;
+            GlobalBestPosition = new double[listLength * 2];
+        }
+
         public void Run(List<Event> events) {
             Random random = new();
 

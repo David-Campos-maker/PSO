@@ -14,16 +14,27 @@ public class Test {
                     new User {
                         Name = "David",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event A", Date = new DateTime(2023, 07 , 07), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(0, 20, 0) } ,
-                            new Event { Name = "Event B", Date = new DateTime(2023, 07 , 07), Time = new TimeSpan(9, 30, 0), Duration = new TimeSpan(0, 30, 0) } ,
-                            new Event { Name = "Event C", Date = new DateTime(2023, 07 , 07), Time = new TimeSpan(8, 0, 0), Duration = new TimeSpan(1, 0, 0) }
+                            new Event { Name = "Event A", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event B", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event C", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event D", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) } ,
+                            new Event { Name = "Event E", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event F", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event G", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event H", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) }
                         }
                     },
                     new User {
                         Name = "Eduardo",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event D", Date = new DateTime(2023, 07 , 07), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(3, 30, 0) } ,
-                            new Event { Name = "Event E", Date = new DateTime(2023, 07 , 07), Time = new TimeSpan(12, 45, 0), Duration = new TimeSpan(2, 0, 0) }
+                            new Event { Name = "Event I", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event J", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event K", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event L", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) } ,
+                            new Event { Name = "Event M", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event N", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event O", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event P", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) }
                         }
                     }
                 }
@@ -38,22 +49,40 @@ public class Test {
                     new User {
                         Name = "David",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event A", Date = new DateTime(2023, 08 , 03), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(2, 0, 0) } ,
-                            new Event { Name = "Event B", Date = new DateTime(2023, 08 , 03), Time = new TimeSpan(13, 30, 0), Duration = new TimeSpan(3, 30, 0) }
+                            new Event { Name = "Event A", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event B", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event C", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event D", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) } ,
+                            new Event { Name = "Event E", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event F", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event G", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event H", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) }
                         }
                     },
                     new User {
                         Name = "Eduardo",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event C", Date = new DateTime(2023, 08 , 02), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(3, 35, 0) } ,
-                            new Event { Name = "Event D", Date = new DateTime(2023, 08 , 02), Time = new TimeSpan(12, 45, 0), Duration = new TimeSpan(0, 10, 0) }
+                            new Event { Name = "Event I", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event J", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event K", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event L", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) } ,
+                            new Event { Name = "Event M", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event N", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event O", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event P", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) }
                         }
                     },
                     new User {
                         Name = "Rodrigo",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event E", Date = new DateTime(2023, 08 , 04), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 35, 0) } ,
-                            new Event { Name = "Event F", Date = new DateTime(2023, 08 , 04), Time = new TimeSpan(14, 30, 0), Duration = new TimeSpan(0, 10, 0) }
+                            new Event { Name = "Event Q", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event R", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event S", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event T", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) } ,
+                            new Event { Name = "Event U", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event V", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event W", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event X", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) }
                         }
                     }
                 }
@@ -62,30 +91,46 @@ public class Test {
                 Name = "Event 3" , 
                 Date = new DateTime(2023 , 07 , 04) ,
                 Time = new TimeSpan(8 , 0 , 0) ,
-                Duration = new TimeSpan(0, 30, 0) ,
+                Duration = new TimeSpan(3, 0, 0) ,
                 Priority = true ,
                 Participants = new List<User> {
                     new User {
                         Name = "David",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event A", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(0, 20, 0) } ,
-                            new Event { Name = "Event B", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(9, 30, 0), Duration = new TimeSpan(0, 30, 0) }
+                            new Event { Name = "Event A", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event B", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event C", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event D", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) } ,
+                            new Event { Name = "Event E", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event F", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event G", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event H", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) }
                         }
                     },
                     new User {
                         Name = "Eduardo",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event C", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(3, 35, 0) } ,
-                            new Event { Name = "Event D", Date = new DateTime(2023, 07 , 08), Time = new TimeSpan(12, 45, 0), Duration = new TimeSpan(0, 10, 0) }
+                            new Event { Name = "Event I", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event J", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event K", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event L", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) } ,
+                            new Event { Name = "Event M", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event N", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event O", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event P", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) }
                         }
                     },
                     new User {
                         Name = "Rodrigo",
                         Schedule = new List<Event> {
-                            new Event { Name = "Event E", Date = new DateTime(2023, 07 , 09), Time = new TimeSpan(9, 0, 0), Duration = new TimeSpan(2, 0, 0) } ,
-                            new Event { Name = "Event F", Date = new DateTime(2023, 07 , 09), Time = new TimeSpan(12, 0, 0), Duration = new TimeSpan(2, 0, 0) },
-                            new Event { Name = "Event G", Date = new DateTime(2023, 07 , 09), Time = new TimeSpan(15, 0, 0), Duration = new TimeSpan(2, 0, 0) } ,
-                            new Event { Name = "Event H", Date = new DateTime(2023, 07 , 09), Time = new TimeSpan(17, 0, 0), Duration = new TimeSpan(1, 0, 0) }
+                            new Event { Name = "Event Q", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event R", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event S", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event T", Date = new DateTime(2023, 08 , 21), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) } ,
+                            new Event { Name = "Event U", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(7, 0, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event V", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(10, 5, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event W", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(13, 10, 0), Duration = new TimeSpan(3, 0, 0) } ,
+                            new Event { Name = "Event X", Date = new DateTime(2023, 08 , 22), Time = new TimeSpan(16, 15, 0), Duration = new TimeSpan(2, 0, 0) }
                         }
                     }
                 }
@@ -93,20 +138,13 @@ public class Test {
         };
 
         //Initializing PSO attributes dynamically according to list size
-        int populationSize = Math.Max(events.Count / 20, 100);
-        int iterations = Math.Max(events.Count / 100, 1000);
-        double inertiaCoefficient = 0.5 * Math.Min(events.Count / 1000.0, 1.0);
-        double cognitiveCoefficient = 1.0 * Math.Min(events.Count / 1000.0, 1.0);
-        double socialCoefficient = 1.0 * Math.Min(events.Count / 1000.0, 1.0);
+        int populationSize = 1000;
+        int iterations = 100;
+        double inertiaCoefficient = 0.5;
+        double cognitiveCoefficient = 1.0;
+        double socialCoefficient = 1.0;
 
-        PSOAlias.PSO pso = new PSOAlias.PSO {
-            PopulationSize = populationSize ,
-            Iterations = iterations ,
-            InertiaCoefficient = inertiaCoefficient ,
-            CognitiveCoefficient = cognitiveCoefficient ,
-            SocialCoefficient = socialCoefficient ,
-            GlobalBestPosition = new double[events.Count * 2]
-        };
+        PSOAlias.PSO pso = new(populationSize , iterations , inertiaCoefficient , cognitiveCoefficient , socialCoefficient , events.Count);
 
         pso.Run(events);
 
