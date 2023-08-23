@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using PSO.Classes;
 
@@ -51,20 +52,20 @@ namespace PSO.Helpers {
                             TimeSpan scheduledEndTime = scheduledStartTime.Add(scheduledEvent.Duration);
 
                             if (eventDate == scheduledDate && !(time >= scheduledEndTime || time + e.Duration <= scheduledStartTime)) {
-                                eventQuality += 1000.0; // Apply penalty for overlapping event
+                                eventQuality += 10000.0; // Apply penalty for overlapping event
                             }
                         }
 
                         // Check if the current event is within the user's schedule
                         if (!IsEventWithinSchedule(eventDate, time, time.Add(e.Duration), user.Schedule)) {
-                            eventQuality += 1000.0; // Apply a large penalty for event not being within the schedule
+                            eventQuality += 10000.0; // Apply a large penalty for event not being within the schedule
                         }
 
                         // Check if the current event fits within the user's work day
                         TimeSpan workDayStart = new(7, 0, 0);
                         TimeSpan workDayEnd = new(18, 0, 0);
                         if (time + e.Duration > workDayEnd || time + e.Duration < workDayStart) {
-                            eventQuality += 1000.0; // Apply a large penalty for event not fitting within the user's work day
+                            eventQuality += 10000.0; // Apply a large penalty for event not fitting within the user's work day
                         }
                     }
                 }
@@ -76,8 +77,31 @@ namespace PSO.Helpers {
             return quality;
         }
 
-        public static DateTime GetMaxDate(bool isPriority) {
-            return isPriority ? DateTime.Now.Date.AddDays(2) : DateTime.Now.Date.AddDays(14);
+        public static DateTime GetMaxDate(Event e) {
+            if (e.Priority) {
+                bool isFullDay = false; 
+
+                foreach (User participant in e.Participants.Where(participant => participant != null)) {
+                    TimeSpan totalHoras = TimeSpan.Zero; 
+
+                    foreach (Event scheduledEvent in participant.Schedule.Where(scheduledEvent => scheduledEvent != null)) {
+                        totalHoras += scheduledEvent.Duration; 
+                    }
+
+                    if (totalHoras.TotalHours >= 8 && totalHoras.TotalHours <= 12) {
+                        isFullDay = true; 
+                        break;
+                    }
+                }
+
+                if (isFullDay) {
+                    return DateTime.Now.AddDays(2); 
+                } else {
+                    return DateTime.Now.AddDays(4); 
+                }
+            } else {
+                return DateTime.Now.AddDays(14); 
+            }
         }
 
         public static double GenerateValidTime(List<Event> events, int eventIndex, Random random) {

@@ -41,7 +41,7 @@ namespace PSO.Classes {
 
                     // Generate valid date within the specified range
                     DateTime solution_minDate = DateTime.Now.Date;
-                    DateTime solution_maxDate = Helper.GetMaxDate(isPriority);
+                    DateTime solution_maxDate = Helper.GetMaxDate(e);
                     double minValue = solution_minDate.ToOADate();
                     double maxValue = solution_maxDate.ToOADate();
 
@@ -78,7 +78,7 @@ namespace PSO.Classes {
 
                             // Generate valid date within the specified range
                             DateTime solution_minDate = DateTime.Now.Date;
-                            DateTime solution_maxDate = Helper.GetMaxDate(isPriority);
+                            DateTime solution_maxDate = Helper.GetMaxDate(e);
                             double minValue = solution_minDate.ToOADate();
                             double maxValue = solution_maxDate.ToOADate();
 
