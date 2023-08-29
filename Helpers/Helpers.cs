@@ -95,9 +95,9 @@ namespace PSO.Helpers {
                 }
 
                 if (isFullDay) {
-                    return DateTime.Now.AddDays(2); 
-                } else {
                     return DateTime.Now.AddDays(4); 
+                } else {
+                    return DateTime.Now.AddDays(2); 
                 }
             } else {
                 return DateTime.Now.AddDays(14); 
