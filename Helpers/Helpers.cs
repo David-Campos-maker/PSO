@@ -100,56 +100,22 @@ namespace PSO.Helpers {
                     return DateTime.Now.AddDays(2); 
                 }
             } else {
-                return DateTime.Now.AddDays(14); 
+                return DateTime.Now.AddDays(21); 
             }
         }
 
         public static double GenerateValidTime(List<Event> events, int eventIndex, Random random) {
             Event e = events[eventIndex];
-
-            double minTime = Math.Max(e.Time.TotalHours + e.Duration.TotalHours, 8);
-            double maxTime = 19;
-            double time = minTime + (maxTime - minTime) * random.NextDouble();
-            time = Math.Round(time / 0.25) * 0.25;
-
-            // Continue generating times until a valid time is found
-            while (HasConflict(events, eventIndex, time)) {
-                time = minTime + (maxTime - minTime) * random.NextDouble();
-                time = Math.Round(time / 0.25) * 0.25;
-            }
+            double minTime = Math.Max(e.Time.TotalHours + e.Duration.TotalHours, 7);
+            double maxTime = 18;
+            double time = GenerateRandomTime(minTime, maxTime, random);
 
             return time;
         }
 
-        public static bool HasConflict(List<Event> events, int eventIndex, double time) {
-            Event e = events[eventIndex];
-            double endTime = time + e.Duration.TotalHours;
-
-            // Check if the generated schedule conflicts with the participants' agenda
-            if (e.Participants != null) {
-                foreach (User participant in e.Participants) {
-                    // Check conflict with events already optimized by PSO
-                    for (int i = 0; i < eventIndex; i++) {
-                        Event scheduledEvent = events[i];
-                        double scheduledEndTime = scheduledEvent.Time.TotalHours + scheduledEvent.Duration.TotalHours;
-                        if (e.Date == scheduledEvent.Date && ((time >= scheduledEvent.Time.TotalHours && time < scheduledEndTime) || (endTime > scheduledEvent.Time.TotalHours && endTime <= scheduledEndTime) || (time <= scheduledEvent.Time.TotalHours && endTime >= scheduledEndTime))) {
-                            return true;
-                        }
-                    }
-
-                    // Check for conflicts with events in the attendee's agenda
-                    if (participant.Schedule != null) {
-                        foreach (Event scheduledEvent in participant.Schedule) {
-                            double scheduledEndTime = scheduledEvent.Time.TotalHours + scheduledEvent.Duration.TotalHours;
-                            if (e.Date == scheduledEvent.Date && ((time >= scheduledEvent.Time.TotalHours && time < scheduledEndTime) || (endTime > scheduledEvent.Time.TotalHours && endTime <= scheduledEndTime) || (time <= scheduledEvent.Time.TotalHours && endTime >= scheduledEndTime))) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
+        private static double GenerateRandomTime(double minTime, double maxTime, Random random) {
+            double time = minTime + (maxTime - minTime) * random.NextDouble();
+            return Math.Round(time / 0.25) * 0.25;
         }
 
         public static void AddEventToSchedule(string name, DateTime date, TimeSpan time, TimeSpan duration, User user) {

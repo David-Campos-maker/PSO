@@ -13,3 +13,10 @@ C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\refint\PSO.dll
 C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.pdb
 C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.genruntimeconfig.cache
 C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\ref\PSO.dll
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\System.Data.SqlClient.dll
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\runtimes\win-arm64\native\sni.dll
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\runtimes\win-x64\native\sni.dll
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\runtimes\win-x86\native\sni.dll
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\Dav_i\PSO\PSO\bin\Debug\net7.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\Dav_i\PSO\PSO\obj\Debug\net7.0\PSO.csproj.CopyComplete
