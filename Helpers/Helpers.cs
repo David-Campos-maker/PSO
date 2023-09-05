@@ -26,7 +26,7 @@ namespace PSO.Helpers {
             }
 
             // Check if the new event fits after the last scheduled event
-            if (newEvent.Time >= scheduledEvents[scheduledEvents.Count - 1].Time + scheduledEvents[scheduledEvents.Count - 1].Duration) {
+            if (newEvent.Time >= scheduledEvents[^1].Time + scheduledEvents[scheduledEvents.Count - 1].Duration) {
                 return true;
             }
 
