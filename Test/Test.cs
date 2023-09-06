@@ -2,6 +2,7 @@ using PSO.Classes;
 using PSOAlias = PSO.Classes;
 using System.Data.SqlClient;
 using System.Data;
+using System.Diagnostics;
 
 public class Test {
     public static void Main() {
@@ -107,7 +108,10 @@ public class Test {
 
         PSOAlias.PSO pso = new PSOAlias.PSO(1000 , 100 , 0.5 , 1.0 , 1.0 , events.Count); 
 
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
         pso.Run(events);
+        stopwatch.Stop();
 
         foreach (var currentEvent in events) {
             if (currentEvent.Participants != null) {
@@ -122,5 +126,11 @@ public class Test {
                 }
             }
         }
+
+        double elapsedTimeInSeconds = stopwatch.ElapsedMilliseconds / 1000.0;
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Elapsed running time: " + elapsedTimeInSeconds + " seconds");
+        Console.ResetColor();
     }
 }
