@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using PSO.Helpers;
 
 namespace PSO.Classes {
@@ -72,9 +73,11 @@ namespace PSO.Classes {
         /// <returns>A 2D matrix representing the initialized population.</returns>
         private double[][] InitializePopulation(int eventCount) {
             double[][] population = new double[PopulationSize][];
+            
             for (int i = 0; i < PopulationSize; i++) {
                 population[i] = new double[eventCount * 2];
             }
+
             return population;
         }
 
@@ -85,9 +88,11 @@ namespace PSO.Classes {
         /// <returns>A 2D matrix representing initialized speeds.</returns>
         private double[][] InitializeVelocities(int eventCount) {
             double[][] velocities = new double[PopulationSize][];
+
             for (int i = 0; i < PopulationSize; i++) {
                 velocities[i] = new double[eventCount * 2];
             }
+
             return velocities;
         }
 
@@ -98,9 +103,11 @@ namespace PSO.Classes {
         /// <returns>A 2D matrix representing initialized personal positions.</returns>
         private double[][] InitializePersonalBestPosition(int eventCount) {
             double[][] personalBestPosition = new double[PopulationSize][];
+
             for (int i = 0; i < PopulationSize; i++) {
                 personalBestPosition[i] = new double[eventCount * 2];
             }
+            
             return personalBestPosition;
         }
 
@@ -197,7 +204,7 @@ namespace PSO.Classes {
         /// <param name="velocities">A 2D array representing the velocities of particles.</param>
         /// <param name="personalBestPosition">A 2D array storing the personal best positions of particles.</param>
         private void UpdateVelocitiesAndPositions(Random random, int[] sampleIndices, double[][] population, double[][] velocities, double[][] personalBestPosition) {
-            for (int i = 0; i < sampleIndices.Length; i++) {
+            Parallel.For(0 , sampleIndices.Length , i => {
                 int index = sampleIndices[i];
                 double[] position = population[index];
                 double[] velocity = velocities[index];
@@ -215,7 +222,7 @@ namespace PSO.Classes {
                         position[j] += velocity[j];
                     }
                 }
-            }
+            });
         }
 
         /// <summary>

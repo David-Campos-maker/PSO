@@ -69,34 +69,34 @@ namespace PSO.Helpers {
             double quality = 0.0;
 
             // Calculate the quality of each event
-            for (int i = 0; i < events.Count; i++) {
+            Parallel.For(0 , events.Count , i => {
                 Event e = events[i];
 
-                if (e == null) continue;
+                if (e != null) {
+                    // Calculate the quality of the current event
+                    double eventQuality = 0.0;
+                    DateTime eventDate = DateTime.FromOADate(position[i * 2]);
+                    TimeSpan time = TimeSpan.FromHours(position[i * 2 + 1]);
 
-                // Calculate the quality of the current event
-                double eventQuality = 0.0;
-                DateTime eventDate = DateTime.FromOADate(position[i * 2]);
-                TimeSpan time = TimeSpan.FromHours(position[i * 2 + 1]);
-
-                // Check if the current event is within the user's schedule
-                if (e.Participants != null) {
-                    foreach (User user in e.Participants.Where(user => user != null && user.Schedule != null)) {
-                        if (!DoesEventOverlapWithSchedule(eventDate, time, time.Add(e.Duration), user.Schedule)) {
-                            eventQuality += 10000.0; // Apply a large penalty for event not being within the schedule
+                    // Check if the current event is within the user's schedule
+                    if (e.Participants != null) {
+                        foreach (User user in e.Participants.Where(user => user != null && user.Schedule != null)) {
+                            if (!DoesEventOverlapWithSchedule(eventDate, time, time.Add(e.Duration), user.Schedule)) {
+                                eventQuality += 10000.0; // Apply a large penalty for event not being within the schedule
+                            }
                         }
                     }
-                }
 
-                // Check if the current event fits within the day
-                List<Event> eventsOnSameDay = events.Where(ev => ev != null && DateTime.FromOADate(position[events.IndexOf(ev) * 2]) == eventDate).ToList();
-                if (!IsEventWithinDayBounds(e, eventsOnSameDay)) {
-                    eventQuality += 10000.0; // Apply penalty for event not fitting within the day
-                }
+                    // Check if the current event fits within the day
+                    List<Event> eventsOnSameDay = events.Where(ev => ev != null && DateTime.FromOADate(position[events.IndexOf(ev) * 2]) == eventDate).ToList();
+                    if (!IsEventWithinDayBounds(e, eventsOnSameDay)) {
+                        eventQuality += 10000.0; // Apply penalty for event not fitting within the day
+                    }
 
-                // Add the quality of the current event to the total quality
-                quality += eventQuality;
-            }
+                    // Add the quality of the current event to the total quality
+                    quality += eventQuality;
+                }
+            });
 
             return quality;
         }
@@ -129,7 +129,7 @@ namespace PSO.Helpers {
                     return DateTime.Now.AddDays(2); 
                 }
             } else {
-                return DateTime.Now.AddDays(14); 
+                return DateTime.Now.AddDays(21); 
             }
         }
 
